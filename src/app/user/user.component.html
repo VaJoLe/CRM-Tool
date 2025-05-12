@@ -1,4 +1,23 @@
-<p>user works!</p>
+<mat-card>
+  <mat-card-content>
+    <table class="user-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>E-Mail</th>
+          <th>City</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of allUsers">
+          <td>{{ user.firstName }} {{ user.lastName }}</td>
+          <td>{{ user.mail }}</td>
+          <td>{{ user.city }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </mat-card-content>
+</mat-card>
 
 <button
   (click)="openDialog()"

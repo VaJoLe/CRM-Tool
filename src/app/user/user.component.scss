@@ -1,5 +1,50 @@
-.add-user-btn{
-    position: absolute;
-    right: 56px;
-    bottom: 56px;
+.add-user-btn {
+  position: absolute;
+  right: 56px;
+  bottom: 56px;
+}
+
+mat-card-content {
+  padding: 0;
+  &:first-child {
+    padding-top: 0;
+  }
+}
+
+.user-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  thead {
+    background-color: rgba(0, 0, 0, 0.05);
+    text-align: start;
+    height: 50px;
+    th {
+      text-align: start;
+      padding-left: 10px;
+      font-size: 16px;
+      font-weight: 800;
+    }
+  }
+  tbody {
+    tr {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      height: 50px;
+      cursor: pointer;
+
+      td {
+        padding-left: 16px;
+      }
+      
+      &:last-child {
+        border-bottom: 0;
+      }
+
+      &:hover{
+        background-color: rgba(0, 0, 0, 0.03);
+      }
+
+
+    }
+  }
 }

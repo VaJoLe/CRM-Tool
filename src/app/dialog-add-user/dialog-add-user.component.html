@@ -1,9 +1,12 @@
+<mat-progress-bar *ngIf="loading" mode="indeterminate"></mat-progress-bar>
+
 <h2 mat-dialog-title>Add User</h2>
 <mat-dialog-content>
   <div>
     <mat-form-field class="mr-16" appearance="outline">
       <mat-label>First Name</mat-label>
       <input
+        [disabled]="loading"
         [(ngModel)]="user.firstName"
         matInput
         placeholder="Enter first name"
@@ -13,7 +16,25 @@
 
     <mat-form-field appearance="outline">
       <mat-label>Last Name</mat-label>
-      <input [(ngModel)]="user.lastName" matInput placeholder="Placeholder" />
+      <input
+        [disabled]="loading"
+        [(ngModel)]="user.lastName"
+        matInput
+        placeholder="Enter last name"
+      />
+      <!-- <mat-hint>Please enter a name</mat-hint> -->
+    </mat-form-field>
+  </div>
+
+   <div>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>E-Mail</mat-label>
+      <input
+        [disabled]="loading"
+        [(ngModel)]="user.mail"
+        matInput
+        placeholder="Enter E-Mail"
+      />
       <!-- <mat-hint>Please enter a name</mat-hint> -->
     </mat-form-field>
   </div>
@@ -21,7 +42,14 @@
   <div>
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Birth Date</mat-label>
-      <input [(ngModel)]="birthDate" matInput [matDatepicker]="picker" />
+      <input
+        [disabled]="loading"
+        [(ngModel)]="birthDate"
+        matInput
+        [matDatepicker]="picker"
+        placeholder="Enter Birth Date"
+
+      />
       <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
       <mat-datepicker-toggle
         matIconSuffix
@@ -34,7 +62,12 @@
   <div>
     <mat-form-field class="full-width" appearance="outline">
       <mat-label>Street + House No.</mat-label>
-      <input [(ngModel)]="user.street" matInput placeholder="Placeholder" />
+      <input
+        [disabled]="loading"
+        [(ngModel)]="user.street"
+        matInput
+        placeholder="Enter street + No."
+      />
       <!-- <mat-hint>Please enter a name</mat-hint> -->
     </mat-form-field>
   </div>
@@ -42,13 +75,23 @@
   <div>
     <mat-form-field class="mr-16" appearance="outline">
       <mat-label>Zip code</mat-label>
-      <input [(ngModel)]="user.zipCode" matInput placeholder="Placeholder" />
+      <input
+        [disabled]="loading"
+        [(ngModel)]="user.zipCode"
+        matInput
+        placeholder="Enter zip code"
+      />
       <!-- <mat-hint>Please enter a name</mat-hint> -->
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>City</mat-label>
-      <input [(ngModel)]="user.city" matInput placeholder="Placeholder" />
+      <input
+        [disabled]="loading"
+        [(ngModel)]="user.city"
+        matInput
+        placeholder="Enter city"
+      />
       <!-- <mat-hint>Please enter a name</mat-hint> -->
     </mat-form-field>
   </div>
