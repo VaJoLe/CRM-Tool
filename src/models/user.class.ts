@@ -2,8 +2,9 @@ export class User {
   id?: string;
   firstName: string;
   lastName: string;
-  birthDate: number;
+  birthDate: any;
   mail: string;
+  phone: number;
   street: string;
   zipCode: number;
   city: string;
@@ -13,6 +14,7 @@ export class User {
     this.lastName = obj ? obj.lastName : '';
     this.birthDate = obj ? obj.birthDate : '';
     this.mail = obj ? obj.mail : '';
+    this.phone = obj ? obj.phone : '';
     this.street = obj ? obj.street : '';
     this.zipCode = obj ? obj.zipCode : '';
     this.city = obj ? obj.city : '';
@@ -25,6 +27,7 @@ export class User {
       lastName: this.lastName,
       birthDate: this.birthDate,
       mail: this.mail,
+      phone: this.phone,
       street: this.street,
       zipCode: this.zipCode,
       city: this.city,

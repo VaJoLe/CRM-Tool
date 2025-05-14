@@ -5,9 +5,14 @@
       <img class="profile-img" src="./assets/img/profil.png" alt="Profilbild" />
       <h2>{{ user.firstName }} {{ user.lastName }}</h2>
     </div>
-    <button mat-icon-button class="edit-icon-header">
+    <button
+      mat-icon-button
+      class="edit-icon-header"
+      (click)="openEdit('Namen', ['firstName', 'lastName'])"
+    >
       <mat-icon>edit</mat-icon>
     </button>
+    <!-- button mit menu versehen der entweder das bearbeiten des namens/bild erlaubt oder kontakt löscht -->
   </mat-card-content>
 </mat-card>
 
@@ -16,12 +21,16 @@
     <mat-card class="pos-rel">
       <mat-card-header>
         <mat-card-title>
-          <h3>E-Mail</h3>
+          <h3>Telefonnummer</h3>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>{{ user.mail }}</p>
-        <button mat-icon-button class="edit-icon">
+        <p>{{ user.phone }}</p>
+        <button
+          mat-icon-button
+          class="edit-icon"
+          (click)="openEdit('Telefonnummer', 'phone')"
+        >
           <mat-icon>edit</mat-icon>
         </button>
       </mat-card-content>
@@ -30,12 +39,16 @@
     <mat-card class="pos-rel">
       <mat-card-header>
         <mat-card-title>
-          <h3>Geburtstag</h3>
+          <h3>E-Mail</h3>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <p>{{ user.birthDate }}</p>
-        <button mat-icon-button class="edit-icon">
+        <p>{{ user.mail }}</p>
+        <button
+          mat-icon-button
+          class="edit-icon"
+          (click)="openEdit('E-Mail', 'mail')"
+        >
           <mat-icon>edit</mat-icon>
         </button>
       </mat-card-content>
@@ -46,13 +59,34 @@
     <mat-card class="pos-rel">
       <mat-card-header>
         <mat-card-title>
+          <h3>Geburtstag</h3>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ user.birthDate | date : "dd.MM.yyyy" }}</p>
+        <button
+          mat-icon-button
+          class="edit-icon"
+          (click)="openEdit('Geburtstag', 'birthDate')"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="pos-rel">
+      <mat-card-header>
+        <mat-card-title>
           <h3>Anschrift</h3>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <p>{{ user.street }}</p>
         <p>{{ user.zipCode }} {{ user.city }}</p>
-        <button mat-icon-button class="edit-icon">
+        <button
+          mat-icon-button
+          class="edit-icon"
+          (click)="openEdit('Adresse', ['street', 'zipCode', 'city'])"
+        >
           <mat-icon>edit</mat-icon>
         </button>
       </mat-card-content>

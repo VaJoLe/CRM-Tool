@@ -6,7 +6,7 @@
 
     .cover-image {
       height: 150px;
-      background: linear-gradient(to right, #4285f4, #34a853, #fbbc05, #ea4335);
+      background-color:  rgb(255, 232, 190)
     }
 
     .profile-info {
@@ -27,6 +27,11 @@
         margin: 10px 0 0;
         font-size: 24px;
       }
+    }
+    .edit-icon-header{
+        position: absolute;
+        top: 155px;
+        right: 10px;
     }
   }
 }

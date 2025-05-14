@@ -6,6 +6,7 @@ import {
   collectionData,
   doc,
   getDoc,
+  updateDoc,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Observable } from 'rxjs';
@@ -33,4 +34,10 @@ export class UserService {
     const userDocRef = doc(this.usersCollection, id);
     return getDoc(userDocRef);
   }
+
+  updateUser(userId: string, userData: Partial<User>) {
+  const userDocRef = doc(this.firestore, `users/${userId}`);
+  return updateDoc(userDocRef, userData);
+}
+
 }

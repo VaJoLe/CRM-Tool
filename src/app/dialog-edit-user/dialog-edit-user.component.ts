@@ -1,20 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { User } from '../../models/user.class';
+import {
+  provideNativeDateAdapter,
+  MAT_DATE_LOCALE,
+} from '@angular/material/core';
+
 import { FormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
-import { UserService } from '../services/user.service';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgIf } from '@angular/common';
-import { MAT_DATE_LOCALE } from '@angular/material/core';
 
 @Component({
-  selector: 'app-dialog-add-user',
+  selector: 'app-dialog-edit-user',
   standalone: true,
   providers: [
     provideNativeDateAdapter(),
@@ -30,26 +31,27 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     MatProgressBarModule,
     NgIf,
   ],
-  templateUrl: './dialog-add-user.component.html',
-  styleUrl: './dialog-add-user.component.scss',
+  templateUrl: './dialog-edit-user.component.html',
+  styleUrl: './dialog-edit-user.component.scss',
 })
-export class DialogAddUserComponent {
-  user = new User();
-  birthDate!: string;
+export class DialogEditUserComponent {
+  // ladebalken einfügen wieder
   loading = false;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogAddUserComponent>,
-    private userService: UserService
+    public dialogRef: MatDialogRef<DialogEditUserComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: { field: string; value: any }
   ) {}
 
-  saveUser() {
-    this.user.birthDate = new Date(this.birthDate).toISOString();
-
+  save(): void {
     this.loading = true;
-    this.userService.addUser(this.user).then(() => {
-      this.loading = false;
-      this.dialogRef.close();
-    });
+
+    if (this.data.field === 'Geburtstag') {
+      const date: Date = this.data.value;
+      this.dialogRef.close(date);
+    } else {
+      this.dialogRef.close(this.data.value);
+    }
   }
 }
+// alles auf englisch und delet button bei name edit dashboard noch bearbeiten
