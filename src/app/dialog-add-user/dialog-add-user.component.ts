@@ -35,7 +35,7 @@ export class DialogAddUserComponent {
   loading = false;
 
   constructor(
-    private dialogRef: MatDialogRef<DialogAddUserComponent>,
+    public dialogRef: MatDialogRef<DialogAddUserComponent>,
     private userService: UserService
   ) {}
 

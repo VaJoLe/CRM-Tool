@@ -8,11 +8,12 @@ import { User } from '../../models/user.class';
 import { MatCardModule } from '@angular/material/card';
 import { UserService } from '../services/user.service';
 import { NgFor } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatCardModule, NgFor],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatCardModule, NgFor, RouterModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
@@ -32,6 +33,8 @@ export class UserComponent {
   ngOnInit(): void {
     this.userService.getUsers().subscribe((data: User[]) => {
       this.allUsers = data;
+      console.log(data);
+      
     });
   }
 }
