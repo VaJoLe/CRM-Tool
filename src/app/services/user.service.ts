@@ -7,6 +7,7 @@ import {
   doc,
   getDoc,
   updateDoc,
+  deleteDoc,
 } from '@angular/fire/firestore';
 import { User } from '../../models/user.class';
 import { Observable } from 'rxjs';
@@ -35,9 +36,13 @@ export class UserService {
     return getDoc(userDocRef);
   }
 
-  updateUser(userId: string, userData: Partial<User>) {
-  const userDocRef = doc(this.firestore, `users/${userId}`);
-  return updateDoc(userDocRef, userData);
-}
+  updateUser(userId: string, data: Partial<User>): Promise<void> {
+    const userRef = doc(this.firestore, `users/${userId}`);
+    return updateDoc(userRef, data);
+  }
 
+  deleteUser(userId: string): Promise<void> {
+    const userRef = doc(this.firestore, 'users', userId);
+    return deleteDoc(userRef);
+  }
 }

@@ -13,6 +13,8 @@ import {
 import { FormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { NgIf } from '@angular/common';
+import { UserService } from '../services/user.service';
+import { User } from '../../models/user.class';
 
 @Component({
   selector: 'app-dialog-edit-user',
@@ -37,21 +39,48 @@ import { NgIf } from '@angular/common';
 export class DialogEditUserComponent {
   // ladebalken einfügen wieder
   loading = false;
-
   constructor(
     public dialogRef: MatDialogRef<DialogEditUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { field: string; value: any }
+    @Inject(MAT_DIALOG_DATA) public data: { field: string; value: any; userId: string },
+    private userService: UserService
   ) {}
 
-  save(): void {
-    this.loading = true;
 
-    if (this.data.field === 'Geburtstag') {
-      const date: Date = this.data.value;
-      this.dialogRef.close(date);
-    } else {
-      this.dialogRef.close(this.data.value);
-    }
+ save() {
+  this.loading = true;
+
+  const userId = this.data.userId;
+  const value = this.data.value;
+
+  let updateData: Partial<User>;
+
+  // Felder wie E-Mail, Telefonnummer oder Geburtstag liefern nur einen einfachen Wert
+  switch (this.data.field) {
+    case 'E-Mail':
+      updateData = { mail: value };
+      break;
+    case 'Telefonnummer':
+      updateData = { phone: value };
+      break;
+    case 'Geburtstag':
+      updateData = { birthDate: value.toISOString?.() ?? value };
+      break;
+    default:
+      updateData = value; // Name, Adresse = Objekt
   }
+
+  this.userService.updateUser(userId, updateData)
+    .then(() => {
+      this.loading = false;
+      this.dialogRef.close(updateData); // als Objekt zurückgeben
+    })
+    .catch((error) => {
+      console.error("Fehler beim Speichern in Firebase:", error);
+      this.loading = false;
+    });
+}
+
+
+
 }
 // alles auf englisch und delet button bei name edit dashboard noch bearbeiten

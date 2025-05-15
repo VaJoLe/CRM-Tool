@@ -7,11 +7,24 @@
     </div>
     <button
       mat-icon-button
+      [matMenuTriggerFor]="nameMenu"
       class="edit-icon-header"
-      (click)="openEdit('Namen', ['firstName', 'lastName'])"
     >
-      <mat-icon>edit</mat-icon>
+      <mat-icon>more_vert</mat-icon>
     </button>
+    <mat-menu #nameMenu="matMenu">
+      <button
+        mat-menu-item
+        (click)="openEdit('Namen', ['firstName', 'lastName'])"
+      >
+        <mat-icon>edit</mat-icon>
+        <span>Bearbeiten</span>
+      </button>
+      <button mat-menu-item (click)="deleteUser()">
+        <mat-icon>delete</mat-icon>
+        <span>Kontakt löschen</span>
+      </button>
+    </mat-menu>
     <!-- button mit menu versehen der entweder das bearbeiten des namens/bild erlaubt oder kontakt löscht -->
   </mat-card-content>
 </mat-card>
