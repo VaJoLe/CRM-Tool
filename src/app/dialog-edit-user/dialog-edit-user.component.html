@@ -65,6 +65,35 @@
       />
     </mat-form-field>
   </div>
+  <div *ngIf="data.field === 'Termin'">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Termin</mat-label>
+      <input
+        matInput
+        [disabled]="loading"
+        [matDatepicker]="appointmentPicker"
+        [(ngModel)]="data.value"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="appointmentPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #appointmentPicker></mat-datepicker>
+    </mat-form-field>
+  </div>
+  <!-- <div *ngIf="data.field === 'Notiz'">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>{{ data.field }}</mat-label>
+    <textarea
+      matInput
+      [disabled]="loading"
+      [(ngModel)]="data.value"
+      rows="4"
+      placeholder="Schreibe hier deine Notiz..."
+    ></textarea>
+  </mat-form-field>
+</div> -->
+
 </mat-dialog-content>
 
 <mat-dialog-actions>

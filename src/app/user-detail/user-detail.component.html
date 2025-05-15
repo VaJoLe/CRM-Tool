@@ -25,7 +25,6 @@
         <span>Kontakt löschen</span>
       </button>
     </mat-menu>
-    <!-- button mit menu versehen der entweder das bearbeiten des namens/bild erlaubt oder kontakt löscht -->
   </mat-card-content>
 </mat-card>
 
@@ -66,6 +65,23 @@
         </button>
       </mat-card-content>
     </mat-card>
+
+    <mat-card class="pos-rel">
+      <mat-card-header>
+        <mat-card-title>
+          <h3>Notiz</h3>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <textarea
+          matInput
+          [(ngModel)]="user.notice"
+          (blur)="saveNotice()"
+          placeholder="Notiz eingeben..."
+          rows="4"
+        ></textarea>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <div class="right-column">
@@ -99,6 +115,23 @@
           mat-icon-button
           class="edit-icon"
           (click)="openEdit('Adresse', ['street', 'zipCode', 'city'])"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="pos-rel">
+      <mat-card-header>
+        <mat-card-title>
+          <h3>Termin</h3>
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ user.date | date : "dd.MM.yyyy" }}</p>
+        <button
+          mat-icon-button
+          class="edit-icon"
+          (click)="openEdit('Termin', 'date')"
         >
           <mat-icon>edit</mat-icon>
         </button>

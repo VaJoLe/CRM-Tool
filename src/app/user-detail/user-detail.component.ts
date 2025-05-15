@@ -9,6 +9,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { DialogEditUserComponent } from '../dialog-edit-user/dialog-edit-user.component';
 import { CommonModule } from '@angular/common';
 import { MatMenuModule } from '@angular/material/menu';
+import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
   selector: 'app-user-detail',
@@ -19,6 +21,8 @@ import { MatMenuModule } from '@angular/material/menu';
     MatIconButton,
     CommonModule,
     MatMenuModule,
+    FormsModule,
+    MatFormFieldModule,
   ],
   templateUrl: './user-detail.component.html',
   styleUrl: './user-detail.component.scss',
@@ -58,6 +62,9 @@ export class UserDetailComponent {
     if (field === 'Geburtstag') {
       const key = keys as keyof User;
       data = new Date(this.user[key]);
+    } else if (field === 'Termin') {
+      const key = keys as keyof User;
+      data = new Date(this.user[key]);
     } else if (Array.isArray(keys)) {
       data = keys.reduce((acc, key) => {
         acc[key] = this.user[key];
@@ -83,6 +90,8 @@ export class UserDetailComponent {
       // Werte im lokalen User-Objekt aktualisieren
       if (field === 'Geburtstag') {
         this.user.birthDate = (result as any).birthDate;
+      } else if (field === 'Termin') {
+        this.user.date = (result as any).date;
       } else if (typeof result === 'object') {
         Object.assign(this.user, result);
       } else {
@@ -106,6 +115,13 @@ export class UserDetailComponent {
         .catch((err) => console.error('Update fehlgeschlagen', err));
     });
   }
+
+  saveNotice() {
+  this.userService.updateUser(this.userId, { notice: this.user.notice })
+    .then(() => console.log('Notiz gespeichert'))
+    .catch((err) => console.error('Fehler beim Speichern der Notiz:', err));
+}
+
 
   deleteUser() {
     const confirmed = confirm('Möchten Sie diesen Kontakt wirklich löschen?');

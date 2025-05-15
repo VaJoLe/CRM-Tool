@@ -3,6 +3,8 @@ h2 {
 }
 mat-dialog-content {
   padding: 20px 24px;
+  max-height: 450px;
+  overflow: scroll;
   mat-form-field {
     padding: 0;
     padding-top: 10px;

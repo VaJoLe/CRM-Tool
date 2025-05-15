@@ -41,46 +41,50 @@ export class DialogEditUserComponent {
   loading = false;
   constructor(
     public dialogRef: MatDialogRef<DialogEditUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { field: string; value: any; userId: string },
+    @Inject(MAT_DIALOG_DATA)
+    public data: { field: string; value: any; userId: string },
     private userService: UserService
   ) {}
 
+  save() {
+    this.loading = true;
 
- save() {
-  this.loading = true;
+    const userId = this.data.userId;
+    const value = this.data.value;
 
-  const userId = this.data.userId;
-  const value = this.data.value;
+    let updateData: Partial<User>;
 
-  let updateData: Partial<User>;
+    // Felder wie E-Mail, Telefonnummer oder Geburtstag liefern nur einen einfachen Wert
+    switch (this.data.field) {
+      case 'E-Mail':
+        updateData = { mail: value };
+        break;
+      case 'Telefonnummer':
+        updateData = { phone: value };
+        break;
+      case 'Geburtstag':
+        updateData = { birthDate: value.toISOString?.() ?? value };
+        break;
+      case 'Termin':
+        updateData = { date: value.toISOString?.() ?? value };
+        break;
+      case 'Notiz':
+        updateData = { notice: value };
+        break;
+      default:
+        updateData = value; // Name, Adresse = Objekt
+    }
 
-  // Felder wie E-Mail, Telefonnummer oder Geburtstag liefern nur einen einfachen Wert
-  switch (this.data.field) {
-    case 'E-Mail':
-      updateData = { mail: value };
-      break;
-    case 'Telefonnummer':
-      updateData = { phone: value };
-      break;
-    case 'Geburtstag':
-      updateData = { birthDate: value.toISOString?.() ?? value };
-      break;
-    default:
-      updateData = value; // Name, Adresse = Objekt
+    this.userService
+      .updateUser(userId, updateData)
+      .then(() => {
+        this.loading = false;
+        this.dialogRef.close(updateData); // als Objekt zurückgeben
+      })
+      .catch((error) => {
+        console.error('Fehler beim Speichern in Firebase:', error);
+        this.loading = false;
+      });
   }
-
-  this.userService.updateUser(userId, updateData)
-    .then(() => {
-      this.loading = false;
-      this.dialogRef.close(updateData); // als Objekt zurückgeben
-    })
-    .catch((error) => {
-      console.error("Fehler beim Speichern in Firebase:", error);
-      this.loading = false;
-    });
-}
-
-
-
 }
 // alles auf englisch und delet button bei name edit dashboard noch bearbeiten

@@ -33,15 +33,15 @@
         [disabled]="loading"
         [(ngModel)]="birthDate"
         matInput
-        [matDatepicker]="picker"
+        [matDatepicker]="birthPicker"
         placeholder="Enter Birth Date"
       />
       <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
       <mat-datepicker-toggle
         matIconSuffix
-        [for]="picker"
+        [for]="birthPicker"
       ></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker #birthPicker></mat-datepicker>
     </mat-form-field>
   </div>
 
@@ -103,6 +103,36 @@
         placeholder="Enter city"
       />
       <!-- <mat-hint>Please enter a name</mat-hint> -->
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Notice</mat-label>
+      <textarea
+        [disabled]="loading"
+        [(ngModel)]="user.notice"
+        matInput
+        placeholder="Enter notice"
+        rows="4"
+      ></textarea>
+      <!-- <mat-hint>Please enter a name</mat-hint> -->
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Date</mat-label>
+      <input
+        [disabled]="loading"
+        [(ngModel)]="user.date"
+        matInput
+        [matDatepicker]="userPicker"
+        placeholder="Enter Date"
+      />
+      <mat-datepicker-toggle
+        matIconSuffix
+        [for]="userPicker"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #userPicker></mat-datepicker>
     </mat-form-field>
   </div>
 </mat-dialog-content>

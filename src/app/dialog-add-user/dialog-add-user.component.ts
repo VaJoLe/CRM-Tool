@@ -36,6 +36,7 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
 export class DialogAddUserComponent {
   user = new User();
   birthDate!: string;
+  date!: string;
   loading = false;
 
   constructor(
@@ -44,9 +45,10 @@ export class DialogAddUserComponent {
   ) {}
 
   saveUser() {
-    this.user.birthDate = new Date(this.birthDate).toISOString();
-
     this.loading = true;
+    this.user.birthDate = new Date(this.birthDate).toISOString();
+    this.user.date = new Date(this.user.date).toISOString();
+
     this.userService.addUser(this.user).then(() => {
       this.loading = false;
       this.dialogRef.close();
