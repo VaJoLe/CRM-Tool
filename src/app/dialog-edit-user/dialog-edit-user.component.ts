@@ -6,7 +6,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
-  provideNativeDateAdapter,
   MAT_DATE_LOCALE,
 } from '@angular/material/core';
 
@@ -19,10 +18,6 @@ import { User } from '../../models/user.class';
 @Component({
   selector: 'app-dialog-edit-user',
   standalone: true,
-  providers: [
-    provideNativeDateAdapter(),
-    { provide: MAT_DATE_LOCALE, useValue: 'de-DE' },
-  ],
   imports: [
     MatDialogModule,
     MatButtonModule,
@@ -37,7 +32,6 @@ import { User } from '../../models/user.class';
   styleUrl: './dialog-edit-user.component.scss',
 })
 export class DialogEditUserComponent {
-  // ladebalken einfügen wieder
   loading = false;
   constructor(
     public dialogRef: MatDialogRef<DialogEditUserComponent>,
@@ -47,44 +41,56 @@ export class DialogEditUserComponent {
   ) {}
 
   save() {
-    this.loading = true;
+  this.loading = true;
 
-    const userId = this.data.userId;
-    const value = this.data.value;
+  const userId = this.data.userId;
+  const value = this.data.value;
 
-    let updateData: Partial<User>;
+  let updateData: Partial<User>;
 
-    // Felder wie E-Mail, Telefonnummer oder Geburtstag liefern nur einen einfachen Wert
-    switch (this.data.field) {
-      case 'E-Mail':
-        updateData = { mail: value };
-        break;
-      case 'Telefonnummer':
-        updateData = { phone: value };
-        break;
-      case 'Geburtstag':
-        updateData = { birthDate: value.toISOString?.() ?? value };
-        break;
-      case 'Termin':
-        updateData = { date: value.toISOString?.() ?? value };
-        break;
-      case 'Notiz':
-        updateData = { notice: value };
-        break;
-      default:
-        updateData = value; // Name, Adresse = Objekt
-    }
+  // Hilfsfunktion zur Validierung eines Datums
+  const isValidDate = (d: any): d is Date =>
+    d instanceof Date && !isNaN(d.getTime());
 
-    this.userService
-      .updateUser(userId, updateData)
-      .then(() => {
-        this.loading = false;
-        this.dialogRef.close(updateData); // als Objekt zurückgeben
-      })
-      .catch((error) => {
-        console.error('Fehler beim Speichern in Firebase:', error);
-        this.loading = false;
-      });
+  switch (this.data.field) {
+    case 'E-Mail':
+      updateData = { mail: value };
+      break;
+
+    case 'Telefonnummer':
+      updateData = { phone: value };
+      break;
+
+    case 'Geburtstag':
+      updateData = {
+        birthDate: isValidDate(value) ? value.toISOString() : '',
+      };
+      break;
+
+    case 'Termin':
+      updateData = {
+        date: isValidDate(value) ? value.toISOString() : '',
+      };
+      break;
+
+    case 'Notiz':
+      updateData = { notice: value };
+      break;
+
+    default:
+      updateData = value; // z. B. Name oder Adresse
   }
+
+  this.userService
+    .updateUser(userId, updateData)
+    .then(() => {
+      this.loading = false;
+      this.dialogRef.close(updateData);
+    })
+    .catch((error) => {
+      console.error('Fehler beim Speichern in Firebase:', error);
+      this.loading = false;
+    });
 }
-// alles auf englisch und delet button bei name edit dashboard noch bearbeiten
+
+}

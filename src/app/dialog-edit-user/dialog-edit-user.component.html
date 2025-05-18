@@ -38,6 +38,7 @@
         [disabled]="loading"
         [matDatepicker]="picker"
         [(ngModel)]="data.value"
+        placeholder="TT.MM.JJJJ"
       />
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
@@ -73,6 +74,7 @@
         [disabled]="loading"
         [matDatepicker]="appointmentPicker"
         [(ngModel)]="data.value"
+        placeholder="TT.MM.JJJJ"
       />
       <mat-datepicker-toggle
         matSuffix
@@ -81,19 +83,6 @@
       <mat-datepicker #appointmentPicker></mat-datepicker>
     </mat-form-field>
   </div>
-  <!-- <div *ngIf="data.field === 'Notiz'">
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>{{ data.field }}</mat-label>
-    <textarea
-      matInput
-      [disabled]="loading"
-      [(ngModel)]="data.value"
-      rows="4"
-      placeholder="Schreibe hier deine Notiz..."
-    ></textarea>
-  </mat-form-field>
-</div> -->
-
 </mat-dialog-content>
 
 <mat-dialog-actions>
