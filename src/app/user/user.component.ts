@@ -13,7 +13,14 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-user',
   standalone: true,
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule, MatCardModule, NgFor, RouterModule],
+  imports: [
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
+    MatCardModule,
+    NgFor,
+    RouterModule,
+  ],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
@@ -29,12 +36,13 @@ export class UserComponent {
       autoFocus: false,
     });
   }
-
   ngOnInit(): void {
     this.userService.getUsers().subscribe((data: User[]) => {
-      this.allUsers = data;
-      console.log(data);
-      
+      this.allUsers = data.sort((a, b) => {
+        const nameA = `${a.firstName} ${a.lastName}`.toLowerCase();
+        const nameB = `${b.firstName} ${b.lastName}`.toLowerCase();
+        return nameA.localeCompare(nameB);
+      });
     });
   }
 }

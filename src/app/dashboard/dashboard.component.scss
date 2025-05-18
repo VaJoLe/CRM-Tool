@@ -1,0 +1,76 @@
+.search-card {
+  max-width: 100%;
+  margin: 1rem auto;
+}
+
+.search-field {
+  width: 100%;
+}
+
+.result-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 1rem;
+  cursor: pointer;
+
+  mat-list-item:hover {
+    background-color: #f0f0f0;
+  }
+}
+
+.greeting-card {
+  max-width: 100%;
+  margin: 2rem auto;
+  text-align: center;
+
+  h2 {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 1rem;
+  }
+}
+
+.appointment-card {
+  max-width: 100%;
+  margin: 2rem auto;
+}
+
+mat-list-item.clickable {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-list-item.clickable:hover {
+  background-color: #f0f0f0;
+}
+
+.user-info {
+  font-weight: bold;
+}
+
+.date-info {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+
+
+.count-card {
+  max-width: 100%;
+  margin: 1rem auto;
+  text-align: center;
+
+  h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+}

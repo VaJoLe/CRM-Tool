@@ -1,1 +1,55 @@
-<p>dashboard works!</p>
+<mat-card class="search-card">
+  <mat-card-content>
+    <mat-form-field appearance="fill" class="search-field">
+      <mat-label>Kontakt suchen</mat-label>
+      <input
+        matInput
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Name oder E-Mail"
+      />
+    </mat-form-field>
+    <mat-list *ngIf="filteredUsers.length > 0" class="result-list">
+      <mat-list-item
+        *ngFor="let user of filteredUsers"
+        (click)="goToUserDetail(user.id!)"
+      >
+        {{ user.firstName }} {{ user.lastName }} – {{ user.mail }}
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="greeting-card">
+  <mat-card-content>
+    <h2>{{ greeting }} 👋</h2>
+    <p>{{ currentDate }}</p>
+    <p>Uhrzeit: {{ currentTime }}</p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="appointment-card">
+  <mat-card-title>Nächste Termine</mat-card-title>
+  <mat-card-content>
+    <mat-list *ngIf="usersWithAppointments.length > 0">
+      <mat-list-item
+        *ngFor="let user of usersWithAppointments"
+        (click)="goToUserDetail(user.id!)"
+        class="clickable"
+      >
+        <div class="user-info">{{ user.firstName }} {{ user.lastName }}</div>
+        <div class="date-info">
+          {{ user.date | date : "dd.MM.yyyy" }}
+        </div>
+      </mat-list-item>
+    </mat-list>
+    <p *ngIf="usersWithAppointments.length === 0">Keine Termine vorhanden.</p>
+  </mat-card-content>
+</mat-card>
+
+<mat-card class="count-card">
+  <mat-card-content>
+    <h3>Gesamtanzahl Kontakte</h3>
+    <p>{{ totalUsers }}</p>
+  </mat-card-content>
+</mat-card>
