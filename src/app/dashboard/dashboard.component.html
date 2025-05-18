@@ -31,23 +31,24 @@
 <mat-card class="appointment-card">
   <mat-card-title>Nächste Termine</mat-card-title>
   <mat-card-content>
-    <mat-list *ngIf="usersWithAppointments.length > 0">
-      <mat-list-item
-        *ngFor="let user of usersWithAppointments"
-        (click)="goToUserDetail(user.id!)"
-        class="clickable"
-      >
-        <div class="user-info">{{ user.firstName }} {{ user.lastName }}</div>
-        <div class="date-info">
-          {{ user.date | date : "dd.MM.yyyy, HH:mm" }} Uhr
-        </div>
-        <!-- <div class="notiz">
-          {{ user.notice }} 
-        </div> -->
-        <!-- nebeneinander tag/uhrzeit, wer kommt und notiz -->
-      </mat-list-item>
-    </mat-list>
-    <p *ngIf="usersWithAppointments.length === 0">Keine Termine vorhanden.</p>
+    <table *ngIf="usersWithAppointments.length > 0" class="appointment-table">
+  <thead>
+    <tr>
+      <th>Datum & Uhrzeit</th>
+      <th>Name</th>
+      <th>Notiz</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of usersWithAppointments" (click)="goToUserDetail(user.id!)" class="clickable">
+      <td>{{ user.date | date: "dd.MM.yyyy, HH:mm" }} Uhr</td>
+      <td>{{ user.firstName }} {{ user.lastName }}</td>
+      <td>{{ user.notice }}</td>
+    </tr>
+  </tbody>
+</table>
+<p *ngIf="usersWithAppointments.length === 0">Keine Termine vorhanden.</p>
+
   </mat-card-content>
 </mat-card>
 
