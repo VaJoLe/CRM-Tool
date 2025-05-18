@@ -134,6 +134,16 @@
       ></mat-datepicker-toggle>
       <mat-datepicker #userPicker></mat-datepicker>
     </mat-form-field>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Time</mat-label>
+      <input
+        [disabled]="loading"
+        [(ngModel)]="timePart"
+        matInput
+        type="time"
+        placeholder="HH:mm"
+      />
+    </mat-form-field>
   </div>
 </mat-dialog-content>
 

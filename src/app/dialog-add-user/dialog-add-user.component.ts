@@ -32,6 +32,9 @@ export class DialogAddUserComponent {
   birthDate: Date | null = null;
   date!: string;
   loading = false;
+  datePart: Date | null = null;
+timePart: string = '';
+
 
   constructor(
     public dialogRef: MatDialogRef<DialogAddUserComponent>,
@@ -47,9 +50,18 @@ export class DialogAddUserComponent {
       ? this.birthDate.toISOString()
       : '';
 
-    this.user.date = isValidDate(this.user.date)
-      ? this.user.date.toISOString()
-      : '';
+    if (
+    isValidDate(this.user.date) &&
+    this.timePart &&
+    /^\d{2}:\d{2}$/.test(this.timePart)
+  ) {
+    const [h, m] = this.timePart.split(':').map(Number);
+    const dateWithTime = new Date(this.user.date);
+    dateWithTime.setHours(h, m, 0, 0);
+    this.user.date = dateWithTime.toISOString(); // ✅ wichtig!
+  } else {
+    this.user.date = '';
+  }
 
     this.userService.addUser(this.user).then(() => {
       this.loading = false;

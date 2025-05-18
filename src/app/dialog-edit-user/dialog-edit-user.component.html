@@ -73,7 +73,7 @@
         matInput
         [disabled]="loading"
         [matDatepicker]="appointmentPicker"
-        [(ngModel)]="data.value"
+        [(ngModel)]="datePart"
         placeholder="TT.MM.JJJJ"
       />
       <mat-datepicker-toggle
@@ -81,6 +81,17 @@
         [for]="appointmentPicker"
       ></mat-datepicker-toggle>
       <mat-datepicker #appointmentPicker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Uhrzeit</mat-label>
+      <input
+        matInput
+        type="time"
+        [(ngModel)]="timePart"
+        placeholder="HH:mm"
+        [disabled]="loading"
+      />
     </mat-form-field>
   </div>
 </mat-dialog-content>

@@ -30,6 +30,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class UserDetailComponent {
   userId: string = '';
   user: User = new User();
+  keys: (keyof User)[] = [
+    'firstName',
+    'lastName',
+    'birthDate',
+    'mail',
+    'phone',
+    'street',
+    'zipCode',
+    'city',
+    'notice',
+    'date',
+  ];
 
   constructor(
     private userService: UserService,
@@ -54,22 +66,22 @@ export class UserDetailComponent {
     });
   }
 
-  openEdit(field: string, keys: keyof User | (keyof User)[]) {
+  openEdit(field: keyof User | string, keys: keyof User | (keyof User)[]) {
     (document.activeElement as HTMLElement)?.blur();
 
     let data: any;
 
-    if (field === 'Geburtstag') {
+    if (field === 'Geburtstag' || field === 'Termin') {
       const key = keys as keyof User;
-      data = new Date(this.user[key]);
-    } else if (field === 'Termin') {
-      const key = keys as keyof User;
-      data = new Date(this.user[key]);
+      data = this.user[key]
+        ? new Date(this.user[key] as string | number | Date)
+        : null;
     } else if (Array.isArray(keys)) {
-      data = keys.reduce((acc, key) => {
-        acc[key] = this.user[key];
-        return acc;
-      }, {} as Partial<User>);
+      const updateData: Partial<User> = {};
+
+      (keys as (keyof User)[]).forEach((key) => {
+        updateData[key] = this.user[key as keyof User];
+      });
     } else {
       const key = keys as keyof User;
       data = this.user[key];
@@ -79,7 +91,7 @@ export class UserDetailComponent {
       data: {
         field,
         value: data,
-        userId: this.user.id, // << hier wird die ID an den Dialog übergeben
+        userId: this.user.id,
       },
       autoFocus: false,
     });
@@ -87,7 +99,6 @@ export class UserDetailComponent {
     dialogRef.afterClosed().subscribe((result) => {
       if (!result) return;
 
-      // Werte im lokalen User-Objekt aktualisieren
       if (field === 'Geburtstag') {
         this.user.birthDate = (result as any).birthDate;
       } else if (field === 'Termin') {
@@ -96,7 +107,7 @@ export class UserDetailComponent {
         Object.assign(this.user, result);
       } else {
         const key = keys as keyof User;
-        (this.user as any)[key] = result;
+        this.user[key] = result;
       }
 
       let updatedFields: Partial<User>;
@@ -104,8 +115,7 @@ export class UserDetailComponent {
       if (typeof result === 'object') {
         updatedFields = result;
       } else {
-        // keys ist entweder ein string oder ein array von strings → korrekt extrahieren
-        const key = typeof keys === 'string' ? keys : keys[0];
+        const key = Array.isArray(keys) ? keys[0] : keys;
         updatedFields = { [key]: result } as Partial<User>;
       }
 
@@ -117,11 +127,11 @@ export class UserDetailComponent {
   }
 
   saveNotice() {
-  this.userService.updateUser(this.userId, { notice: this.user.notice })
-    .then(() => console.log('Notiz gespeichert'))
-    .catch((err) => console.error('Fehler beim Speichern der Notiz:', err));
-}
-
+    this.userService
+      .updateUser(this.userId, { notice: this.user.notice })
+      .then(() => console.log('Notiz gespeichert'))
+      .catch((err) => console.error('Fehler beim Speichern der Notiz:', err));
+  }
 
   deleteUser() {
     const confirmed = confirm('Möchten Sie diesen Kontakt wirklich löschen?');

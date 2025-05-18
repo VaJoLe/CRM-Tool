@@ -1,28 +1,23 @@
 export class User {
-  id?: string;
-  firstName: string;
-  lastName: string;
-  birthDate: any;
-  mail: string;
-  phone: number;
-  street: string;
-  zipCode: number;
-  city: string;
-  notice: string;
-  date: string;
+  [key: string]: any; // 🛡️ ermöglicht dynamischen Zugriff auf Properties
 
-  constructor(obj?: any) {
-    this.firstName = obj ? obj.firstName : '';
-    this.lastName = obj ? obj.lastName : '';
-    this.birthDate = obj ? obj.birthDate : '';
-    this.mail = obj ? obj.mail : '';
-    this.phone = obj ? obj.phone : '';
-    this.street = obj ? obj.street : '';
-    this.zipCode = obj ? obj.zipCode : '';
-    this.city = obj ? obj.city : '';
-    this.id = obj?.id || '';
-    this.notice = obj ? obj.notice : '';
-    this.date = obj ? obj.date : '';
+
+  id?: string;
+  firstName: string = '';
+  lastName: string = '';
+  mail: string = '';
+  phone: string = '';
+  street: string = '';
+  zipCode: string = '';
+  city: string = '';
+  birthDate: string = '';
+  notice: string = '';
+  date: string = '';
+
+  constructor(obj?: Partial<User>) {
+    if (obj) {
+      Object.assign(this, obj);
+    }
   }
 
   toJSON() {
