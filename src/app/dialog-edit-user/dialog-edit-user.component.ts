@@ -31,6 +31,8 @@ export class DialogEditUserComponent {
   loading = false;
   datePart: Date | null = null;
   timePart: string = '';
+  birthDateInvalid = false;
+  appointmentDateInvalid = false;
 
   constructor(
     public dialogRef: MatDialogRef<DialogEditUserComponent>,
@@ -38,75 +40,174 @@ export class DialogEditUserComponent {
     public data: { field: string; value: any; userId: string },
     private userService: UserService
   ) {
+    this.initDateTime();
+    this.initAddress();
+  }
+
+  private initDateTime(): void {
     if (this.data.field === 'Termin' && typeof this.data.value === 'string') {
-  const date = new Date(this.data.value);
-  if (!isNaN(date.getTime())) {
-    this.datePart = date;
-    this.timePart = date.toISOString().substring(11, 16); // z. B. "14:30"
-  }
-}
+      const date = new Date(this.data.value);
+      if (!isNaN(date.getTime())) {
+        this.datePart = date;
 
+        const hours = date.getHours().toString().padStart(2, '0');
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        this.timePart = `${hours}:${minutes}`;
+      }
+    }
   }
 
-  save() {
+  private initAddress(): void {
+    if (
+      this.data.field === 'Adresse' &&
+      (!this.data.value ||
+        typeof this.data.value !== 'object' ||
+        !('street' in this.data.value) ||
+        !('zipCode' in this.data.value) ||
+        !('city' in this.data.value))
+    ) {
+      this.data.value = {
+        street: '',
+        zipCode: '',
+        city: '',
+      };
+    }
+  }
+
+  save(): void {
     this.loading = true;
 
-    const userId = this.data.userId;
-    const value = this.data.value;
-
-    let updateData: Partial<User>;
-
-    // Hilfsfunktion zur Validierung eines Datums
-    const isValidDate = (d: any): d is Date =>
-      d instanceof Date && !isNaN(d.getTime());
-
-    switch (this.data.field) {
-      case 'E-Mail':
-        updateData = { mail: value };
-        break;
-
-      case 'Telefonnummer':
-        updateData = { phone: value };
-        break;
-
-      case 'Geburtstag':
-        updateData = {
-          birthDate: isValidDate(value) ? value.toISOString() : '',
-        };
-        break;
-
-      case 'Termin':
-  if (
-    this.datePart instanceof Date &&
-    !isNaN(this.datePart.getTime()) &&
-    /^\d{2}:\d{2}$/.test(this.timePart)
-  ) {
-    const [h, m] = this.timePart.split(':').map(Number);
-    const combined = new Date(this.datePart);
-    combined.setHours(h, m, 0, 0);
-    updateData = { date: combined.toISOString() };
-  } else {
-    updateData = { date: '' };
-  }
-  break;
-
-      case 'Notiz':
-        updateData = { notice: value };
-        break;
-
-      default:
-        updateData = value; // z. B. Name oder Adresse
+    if (
+      (this.data.field === 'Geburtstag' && this.birthDateInvalid) ||
+      (this.data.field === 'Termin' && this.appointmentDateInvalid)
+    ) {
+      this.loading = false;
+      return;
     }
 
-    this.userService
-      .updateUser(userId, updateData)
-      .then(() => {
-        this.loading = false;
-        this.dialogRef.close(updateData);
-      })
-      .catch((error) => {
-        console.error('Fehler beim Speichern in Firebase:', error);
-        this.loading = false;
-      });
+    const userId = this.data.userId;
+    const updateData = this.buildUpdateData();
+
+    this.userService.updateUser(userId, updateData).then(() => {
+      this.loading = false;
+      this.dialogRef.close(updateData);
+    });
+  }
+
+  private buildUpdateData(): Partial<User> {
+    const field = this.data.field;
+    const value = this.data.value;
+
+    switch (field) {
+      case 'E-Mail':
+        return { mail: value };
+
+      case 'Telefonnummer':
+        return { phone: value };
+
+      case 'Geburtstag':
+        return {
+          birthDate: this.isValidDate(value) ? value.toISOString() : '',
+        };
+
+      case 'Termin':
+        return { date: this.buildDateTimeString(this.datePart, this.timePart) };
+
+      case 'Notiz':
+        return { notice: value };
+
+      case 'Namen':
+      case 'Adresse':
+        return value;
+
+      default:
+        return {};
+    }
+  }
+
+  private isValidDate(d: any): d is Date {
+    return d instanceof Date && !isNaN(d.getTime());
+  }
+
+  private buildDateTimeString(datePart: any, timePart: string): string {
+    if (this.isValidDate(datePart) && /^\d{2}:\d{2}$/.test(timePart)) {
+      const [h, m] = timePart.split(':').map(Number);
+      const localDate = new Date(
+        datePart.getFullYear(),
+        datePart.getMonth(),
+        datePart.getDate(),
+        h,
+        m,
+        0
+      );
+      return localDate.toISOString();
+    }
+    return '';
+  }
+
+  onRawDateInput(
+    event: any,
+    target: 'birthDate' | 'appointment' = 'birthDate'
+  ): void {
+    const raw = this.formatRawDate(event.target.value);
+    event.target.value = raw;
+
+    const parsedDate = this.parseAndValidateDate(raw);
+
+    this.updateTargetField(target, parsedDate);
+  }
+
+  private formatRawDate(input: string): string {
+    let raw = input.replace(/\D/g, '');
+
+    if (raw.length >= 3 && raw.length <= 4) {
+      raw = raw.slice(0, 2) + '.' + raw.slice(2);
+    } else if (raw.length >= 5) {
+      raw = raw.slice(0, 2) + '.' + raw.slice(2, 4) + '.' + raw.slice(4, 8);
+    }
+
+    return raw;
+  }
+
+  private parseAndValidateDate(raw: string): Date | null {
+    const parts = raw.split('.');
+    if (parts.length !== 3) return null;
+
+    const [dayStr, monthStr, yearStr] = parts;
+    const day = parseInt(dayStr, 10);
+    const month = parseInt(monthStr, 10);
+    const year = parseInt(yearStr, 10);
+
+    if (
+      isNaN(day) ||
+      isNaN(month) ||
+      isNaN(year) ||
+      day < 1 ||
+      day > 31 ||
+      month < 1 ||
+      month > 12 ||
+      year < 1900 ||
+      year > 2100
+    ) {
+      return null;
+    }
+
+    const date = new Date(year, month - 1, day);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  private updateTargetField(
+    target: 'birthDate' | 'appointment',
+    date: Date | null
+  ): void {
+    const isValid = !!date;
+
+    if (target === 'birthDate') {
+      this.data.value = date;
+      this.birthDateInvalid = !isValid;
+    } else if (target === 'appointment') {
+      this.datePart = date;
+      this.appointmentDateInvalid = !isValid;
+    }
   }
 }

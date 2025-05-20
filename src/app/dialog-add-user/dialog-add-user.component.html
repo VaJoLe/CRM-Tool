@@ -34,7 +34,10 @@
         [(ngModel)]="birthDate"
         matInput
         [matDatepicker]="birthPicker"
+        (input)="onRawDateInput($event, 'birthDate')"
         placeholder="TT.MM.JJJJ"
+          maxlength="10"
+
       />
       <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
       <mat-datepicker-toggle
@@ -126,7 +129,10 @@
         [(ngModel)]="user.date"
         matInput
         [matDatepicker]="userPicker"
+        (input)="onRawDateInput($event, 'date')"
         placeholder="Enter Date"
+          maxlength="10"
+
       />
       <mat-datepicker-toggle
         matIconSuffix

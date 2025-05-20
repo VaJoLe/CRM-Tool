@@ -66,64 +66,43 @@ export class UserDetailComponent {
     });
   }
 
-  openEdit(field: keyof User | string, keys: keyof User | (keyof User)[]) {
+  openEdit(field: string, value: string | string[]): void {
     (document.activeElement as HTMLElement)?.blur();
 
-    let data: any;
-
-    if (field === 'Geburtstag' || field === 'Termin') {
-      const key = keys as keyof User;
-      data = this.user[key]
-        ? new Date(this.user[key] as string | number | Date)
-        : null;
-    } else if (Array.isArray(keys)) {
-      const updateData: Partial<User> = {};
-
-      (keys as (keyof User)[]).forEach((key) => {
-        updateData[key] = this.user[key as keyof User];
-      });
-    } else {
-      const key = keys as keyof User;
-      data = this.user[key];
-    }
+    const fieldValue = this.getFieldValue(value);
 
     const dialogRef = this.dialog.open(DialogEditUserComponent, {
       data: {
         field,
-        value: data,
-        userId: this.user.id,
+        value: fieldValue,
+        userId: this.userId,
       },
       autoFocus: false,
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (!result) return;
-
-      if (field === 'Geburtstag') {
-        this.user.birthDate = (result as any).birthDate;
-      } else if (field === 'Termin') {
-        this.user.date = (result as any).date;
-      } else if (typeof result === 'object') {
-        Object.assign(this.user, result);
-      } else {
-        const key = keys as keyof User;
-        this.user[key] = result;
-      }
-
-      let updatedFields: Partial<User>;
-
-      if (typeof result === 'object') {
-        updatedFields = result;
-      } else {
-        const key = Array.isArray(keys) ? keys[0] : keys;
-        updatedFields = { [key]: result } as Partial<User>;
-      }
-
-      this.userService
-        .updateUser(this.userId, updatedFields)
-        .then(() => console.log('Update erfolgreich'))
-        .catch((err) => console.error('Update fehlgeschlagen', err));
+      this.handleDialogResult(result);
     });
+  }
+
+  private getFieldValue(value: string | string[]): any {
+    if (Array.isArray(value)) {
+      const result: any = {};
+      value.forEach((key: string) => {
+        result[key] = this.user[key];
+      });
+      return result;
+    } else {
+      return this.user[value];
+    }
+  }
+
+  private handleDialogResult(result: any): void {
+    if (result) {
+      this.userService.updateUser(this.userId, result).then(() => {
+        Object.assign(this.user, result);
+      });
+    }
   }
 
   saveNotice() {

@@ -39,20 +39,27 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.setGreeting();
-    this.updateDateTime();
-    setInterval(() => this.updateDateTime(), 1000); // Uhrzeit jede Sekunde aktualisieren
+    this.initializeDateTimeUpdater();
+    this.loadAndProcessUsers();
+  }
 
+  private initializeDateTimeUpdater(): void {
+    this.updateDateTime();
+    setInterval(() => this.updateDateTime(), 1000);
+  }
+
+  private loadAndProcessUsers(): void {
     this.userService.getUsers().subscribe((users) => {
       this.allUsers = users;
       this.totalUsers = users.length;
-      // this.filteredUsers = [];
-
-      this.usersWithAppointments = users
-        .filter((user) => user.date) // nur mit Termin
-        .sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        );
+      this.processUsersWithAppointments(users);
     });
+  }
+
+  private processUsersWithAppointments(users: User[]): void {
+    this.usersWithAppointments = users
+      .filter((user) => user.date)
+      .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
   }
 
   onSearch() {
