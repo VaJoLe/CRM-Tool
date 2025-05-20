@@ -1,5 +1,5 @@
 export class User {
-  [key: string]: any; // 🛡️ ermöglicht dynamischen Zugriff auf Properties
+  [key: string]: any;
 
 
   id?: string;

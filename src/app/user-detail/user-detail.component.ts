@@ -118,7 +118,6 @@ export class UserDetailComponent {
       this.userService
         .deleteUser(this.user.id)
         .then(() => {
-          // Nach erfolgreichem Löschen zurück zur Liste
           this.router.navigate(['/user']);
         })
         .catch((error) => console.error('Fehler beim Löschen:', error));

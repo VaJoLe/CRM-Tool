@@ -2,7 +2,7 @@
 
 <h2 mat-dialog-title>{{ data.field }} bearbeiten</h2>
 <mat-dialog-content class="pad-top">
-  <!-- Name -->
+  
   <div *ngIf="data.field === 'Namen'">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Vorname</mat-label>
@@ -14,7 +14,6 @@
     </mat-form-field>
   </div>
 
-  <!-- Adresse -->
   <div *ngIf="data.field === 'Adresse'">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Straße</mat-label>
@@ -47,7 +46,6 @@
     </mat-form-field>
   </div>
 
-  <!-- Einzelfeld -->
   <div *ngIf="data.field === 'E-Mail'">
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>{{ data.field }}</mat-label>

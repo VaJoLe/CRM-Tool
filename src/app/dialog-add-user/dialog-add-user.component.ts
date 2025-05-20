@@ -135,7 +135,6 @@ export class DialogAddUserComponent {
 
     const date = new Date(year, month - 1, day);
 
-    // Sicherheitsabgleich gegen Überlauf
     if (
       date.getFullYear() !== year ||
       date.getMonth() !== month - 1 ||
